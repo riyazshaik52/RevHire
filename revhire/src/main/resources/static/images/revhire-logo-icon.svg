@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="RevHire icon logo">
+  <defs>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B63E6"/>
+      <stop offset="100%" stop-color="#7B55BF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="24" y="24" width="464" height="464" rx="118" fill="url(#iconGrad)"/>
+
+  <rect x="124" y="164" width="264" height="172" rx="34" fill="#FFFFFF" opacity="0.95"/>
+  <rect x="210" y="132" width="92" height="44" rx="18" fill="#FFFFFF" opacity="0.95"/>
+
+  <path d="M156 254 L228 326 L362 196" fill="none" stroke="#4F46E5" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

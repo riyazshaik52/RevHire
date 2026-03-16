@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Job Applications - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .job-header {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .job-meta {
+            color: #666;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .bulk-actions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .application-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .applicant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .applicant-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .applicant-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-APPLIED {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-UNDER_REVIEW {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-SHORTLISTED {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge-REJECTED {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .badge-WITHDRAWN {
+            background: #e0e0e0;
+            color: #616161;
+        }
+
+        .applicant-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .resume-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .cover-letter {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .action-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .status-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-width: 150px;
+        }
+
+        .notes-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .profile-link-btn {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 6px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #d0d7ff;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
+        }
+
+        .profile-link-btn:hover {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-link {
+
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <div class="job-header">
+            <h1 class="job-title" th:text="${job.title}">Software Engineer</h1>
+            <div class="job-meta">
+                <span>📍 <span th:text="${job.location}">New York</span></span>
+                <span>💼 <span th:text="${job.employmentType}">Full-time</span></span>
+                <span>📅 Posted: <span th:text="${#temporals.format(job.createdAt, 'dd MMM yyyy')}">01 Mar
+                        2026</span></span>
+            </div>
+
+            <div class="stats-summary">
+                <div class="stat-box">
+                    <div class="stat-number" th:text="${totalApplications}">45</div>
+                    <div>Total Applications</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" th:text="${groupedApplications.APPLIED.size()}">20</div>
+                    <div>Pending Review</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" th:text="${groupedApplications.SHORTLISTED.size()}">10</div>
+                    <div>Shortlisted</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" th:text="${groupedApplications.REJECTED.size()}">15</div>
+                    <div>Rejected</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <a href="?status=ALL" class="tab"
+                th:classappend="${param.status == null or param.status == 'ALL' ? 'active' : ''}">All</a>
+            <a href="?status=APPLIED" class="tab"
+                th:classappend="${param.status == 'APPLIED' ? 'active' : ''}">Applied</a>
+            <a href="?status=UNDER_REVIEW" class="tab"
+                th:classappend="${param.status == 'UNDER_REVIEW' ? 'active' : ''}">Under Review</a>
+            <a href="?status=SHORTLISTED" class="tab"
+                th:classappend="${param.status == 'SHORTLISTED' ? 'active' : ''}">Shortlisted</a>
+            <a href="?status=REJECTED" class="tab"
+                th:classappend="${param.status == 'REJECTED' ? 'active' : ''}">Rejected</a>
+            <a href="?status=WITHDRAWN" class="tab"
+                th:classappend="${param.status == 'WITHDRAWN' ? 'active' : ''}">Withdrawn</a>
+        </div>
+
+        <!-- Applicant Filters -->
+        <div class="filters-section"
+            style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <form th:action="@{'/employer/job/' + ${job.id} + '/applications'}" method="get"
+                style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <input type="hidden" name="status" th:value="${param.status ?: 'ALL'}">
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-size: 14px;">Experience
+                        (keyword)</label>
+                    <input type="text" name="experience" placeholder="e.g. Developer" th:value="${param.experience}"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-size: 14px;">Skills</label>
+                    <input type="text" name="skills" placeholder="e.g. Java, Python" th:value="${param.skills}"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-size: 14px;">Education
+                        (keyword)</label>
+                    <input type="text" name="education" placeholder="e.g. Bachelor" th:value="${param.education}"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="flex: 1; min-width: 130px;">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-size: 14px;">Applied
+                        From</label>
+                    <input type="date" name="fromDate" th:value="${param.fromDate}"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="flex: 1; min-width: 130px;">
+                    <label style="display: block; margin-bottom: 5px; color: #555; font-size: 14px;">Applied To</label>
+                    <input type="date" name="toDate" th:value="${param.toDate}"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" style="padding: 9px 20px;">Filter</button>
+                    <a th:href="@{'/employer/job/' + ${job.id} + '/applications'(status=${param.status ?: 'ALL'})}"
+                        class="btn"
+                        style="background: #e0e0e0; color: #333; padding: 9px 20px; text-decoration: none;">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="bulk-actions">
+            <input type="checkbox" id="selectAll" onclick="toggleAll(this)">
+            <label for="selectAll">Select All</label>
+            <select id="bulkStatus" class="status-select">
+                <option value="">Bulk Action</option>
+                <option value="UNDER_REVIEW">Mark as Under Review</option>
+                <option value="SHORTLISTED">Shortlist Selected</option>
+                <option value="REJECTED">Reject Selected</option>
+            </select>
+            <input type="text" id="bulkNotes" class="notes-input" placeholder="Add notes (optional)">
+            <button onclick="applyBulkAction()" class="btn btn-primary">Apply to Selected</button>
+        </div>
+
+        <!-- Applications List -->
+        <div th:each="app : ${applications}" class="application-card" th:id="'app-' + ${app.id}">
+            <div class="applicant-header">
+                <div style="display: flex; align-items: start; gap: 10px;">
+                    <div>
+                        <input type="checkbox" class="app-checkbox" th:value="${app.id}"
+                            th:if="${app.status != 'WITHDRAWN'}">
+                        <span class="applicant-name" th:text="${app.user.firstName + ' ' + app.user.lastName}">John
+                            Doe</span>
+                        <div class="applicant-email" th:text="${app.user.email}">john@example.com</div>
+                    </div>
+                    <a th:href="@{'/profile/candidate/' + ${app.user.id}}" class="profile-link-btn">
+                        👤 View Candidate Profile
+                    </a>
+                </div>
+                <span class="status-badge" th:classappend="'badge-' + ${app.status}"
+                    th:text="${app.status.replace('_', ' ')}">Applied</span>
+            </div>
+
+            <div class="applicant-details">
+                <div>
+                    <strong>Applied:</strong> <span
+                        th:text="${#temporals.format(app.applicationDate, 'dd MMM yyyy')}">01 Mar 2026</span>
+                </div>
+                <div>
+                    <strong>Resume:</strong>
+                    <a th:href="@{'/resume/download/' + ${app.resume?.id}}" class="resume-link"
+                        th:text="${app.resume?.originalFileName ?: 'Download Resume'}">resume.pdf</a>
+                </div>
+                <div>
+                    <strong>Experience:</strong> <span th:text="${#lists.size(app.user.experience)} + ' years'">5
+                        years</span>
+                </div>
+                <div>
+                    <strong>Skills:</strong> <span th:text="${app.user.skills ?: 'Not specified'}">Java, Spring</span>
+                </div>
+            </div>
+
+            <div th:if="${app.coverLetter}" class="cover-letter">
+                <strong>Cover Letter:</strong>
+                <p th:text="${app.coverLetter}"></p>
+            </div>
+
+            <div th:if="${app.status == 'WITHDRAWN'}" class="cover-letter"
+                style="background: #fff8f8; border-left: 4px solid #f44336; font-style: normal;">
+                <strong>⚠️ Application Withdrawn</strong>
+                <p th:if="${app.withdrawalReason != null and !app.withdrawalReason.isEmpty()}"
+                    th:text="'Reason: ' + ${app.withdrawalReason}"></p>
+                <p th:unless="${app.withdrawalReason != null and !app.withdrawalReason.isEmpty()}">No reason provided.
+                </p>
+            </div>
+
+            <form th:if="${app.status != 'WITHDRAWN'}" th:action="@{'/employer/application/' + ${app.id} + '/status'}"
+                method="post" class="action-section">
+                <select name="status" class="status-select">
+                    <option value="APPLIED" th:selected="${app.status == 'APPLIED'}">Applied</option>
+                    <option value="UNDER_REVIEW" th:selected="${app.status == 'UNDER_REVIEW'}">Under Review</option>
+                    <option value="SHORTLISTED" th:selected="${app.status == 'SHORTLISTED'}">Shortlisted</option>
+                    <option value="REJECTED" th:selected="${app.status == 'REJECTED'}">Rejected</option>
+                </select>
+                <input type="text" name="notes" class="notes-input" placeholder="Add internal notes"
+                    th:value="${app.employerNotes}">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+
+        <a href="/employer/jobs" class="back-link">← Back to My Jobs</a>
+    </div>
+
+    <script>
+        function toggleAll(source) {
+            checkboxes = document.getElementsByClassName('app-checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+
+        function applyBulkAction() {
+            var selected = [];
+            var checkboxes = document.getElementsByClassName('app-checkbox');
+            var bulkStatus = document.getElementById('bulkStatus').value;
+            var bulkNotes = document.getElementById('bulkNotes').value;
+
+            if (!bulkStatus) {
+                alert('Please select an action');
+                return;
+            }
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selected.push(checkboxes[i].value);
+                }
+            }
+
+            if (selected.length === 0) {
+                alert('Please select at least one application');
+                return;
+            }
+
+            // Create form and submit
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/employer/applications/bulk-update';
+
+            selected.forEach(function (id) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'applicationIds';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            var statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = bulkStatus;
+            form.appendChild(statusInput);
+
+            if (bulkNotes) {
+                var notesInput = document.createElement('input');
+                notesInput.type = 'hidden';
+                notesInput.name = 'notes';
+                notesInput.value = bulkNotes;
+                form.appendChild(notesInput);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+
+</html>

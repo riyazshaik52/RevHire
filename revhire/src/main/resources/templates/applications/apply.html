@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply for Job - RevHire</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .job-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .job-summary h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .job-detail {
+            margin: 5px 0;
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .resume-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #27ae60;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #5a67d8;
+        }
+        .btn-secondary {
+            background: #95a5a6;
+            margin-top: 10px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #27ae60;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>Apply for Job</h1>
+
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <div class="job-summary">
+            <h2 th:text="${job.title}">Software Engineer</h2>
+            <div class="job-detail">Employer: <span th:text="${job.employer != null ? (job.employer.firstName + ' ' + job.employer.lastName) : 'Employer'}">Employer</span></div>
+            <div class="job-detail">Location: <span th:text="${job.location}">New York</span></div>
+            <div class="job-detail">Type: <span th:text="${job.employmentType}">Full-time</span></div>
+            <div class="job-detail" th:if="${job.minSalary}">
+                Salary:
+                <span th:text="${job.salaryCurrency + ' ' + job.minSalary + (job.maxSalary != null ? (' - ' + job.maxSalary) : '')}">$ 80,000 - 100,000</span>
+            </div>
+        </div>
+
+        <form action="/applications/apply/" th:action="@{'/applications/apply/' + ${job.id}}" method="post">
+            <div class="form-group">
+                <label>Select Resume *</label>
+                <select name="resumeId" required>
+                    <option value="">-- Select a resume --</option>
+                    <option th:each="resume : ${resumes}" th:value="${resume.id}" 
+                            th:text="${resume.originalFileName + (resume.isPrimary ? ' (Primary)' : '')}">
+                        resume.pdf
+                    </option>
+                </select>
+                <div class="resume-info" th:if="${resumes.empty}">
+                    ⚠️ You haven't uploaded any resume yet. 
+                    <a href="/resume/upload" style="color: #27ae60;">Upload one now</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Cover Letter (Optional)</label>
+                <textarea name="coverLetter" placeholder="Introduce yourself and explain why you're a good fit for this position..."></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit Application</button>
+        </form>
+
+        <a href="/jobs" class="back-link">← Back to Jobs</a>
+    </div>
+</body>
+</html>

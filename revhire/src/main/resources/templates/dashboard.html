@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eaf1fb;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #0b2f63 0%, #154a92 100%);
+            padding: 15px 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .logo {
+            text-decoration: none;
+            display: inline-block;
+            color: #ffffff;
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .nav-links a {
+            margin-left: 25px;
+            text-decoration: none;
+            color: #eef3ff;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            width: 100%;
+        }
+        
+        .welcome-card h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-card p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            width: 100%;
+        }
+        
+        .link-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .link-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .link-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .link-card p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+            width: 100%;
+        }
+        
+        @media (max-width: 900px) {
+            .links-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .links-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 20px;
+            }
+            
+            .welcome-card {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1>Welcome to RevHire Dashboard</h1>
+            <p>You have successfully logged in! Manage your job search journey from here.</p>
+        </div>
+        
+        <div class="links-container">
+            <a href="/profile" class="link-card">
+                <div class="link-icon">👤</div>
+                <h3>View Profile</h3>
+                <p>View and edit your professional profile, add education, experience, and skills</p>
+            </a>
+            
+            <a href="/jobs" class="link-card">
+                <div class="link-icon">🔍</div>
+                <h3>Browse Jobs</h3>
+                <p>Search through thousands of job listings and apply with one click</p>
+            </a>
+            
+            <a href="/resume" class="link-card">
+                <div class="link-icon">📄</div>
+                <h3>Manage Resume</h3>
+                <p>Upload, update, and manage your resumes for different job applications</p>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 RevHire. All rights reserved. | Professional Job Portal</p>
+        </div>
+    </div>
+</body>
+</html>

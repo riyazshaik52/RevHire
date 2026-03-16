@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="220" viewBox="0 0 880 220" role="img" aria-label="RevHire logo">
+  <defs>
+    <linearGradient id="revhireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B63E6"/>
+      <stop offset="100%" stop-color="#7B55BF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="880" height="220" fill="none"/>
+
+  <g transform="translate(24,24)">
+    <rect x="0" y="0" width="172" height="172" rx="42" fill="url(#revhireGrad)"/>
+    <rect x="36" y="48" width="100" height="70" rx="12" fill="#FFFFFF" opacity="0.94"/>
+    <rect x="72" y="34" width="28" height="20" rx="8" fill="#FFFFFF" opacity="0.94"/>
+    <path d="M52 86 L78 111 L122 66" fill="none" stroke="#4F46E5" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g transform="translate(230,66)">
+    <text x="0" y="62" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="82" font-weight="800" fill="#1F2A63">Rev</text>
+    <text x="182" y="62" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="82" font-weight="800" fill="url(#revhireGrad)">Hire</text>
+    <text x="2" y="108" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="26" font-weight="600" fill="#6B7280">Smart Hiring. Better Matches.</text>
+  </g>
+</svg>

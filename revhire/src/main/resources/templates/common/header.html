@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/common.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div th:fragment="header" class="navbar">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet">
+        <style>
+            .navbar {
+                background: linear-gradient(135deg, #0b2f63 0%, #154a92 100%);
+                padding: 15px 30px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                box-sizing: border-box;
+                font-family: 'Outfit', sans-serif;
+            }
+
+            .logo {
+                text-decoration: none;
+                display: inline-block;
+                color: #ffffff;
+                font-family: 'Outfit', sans-serif;
+                font-size: 34px;
+                font-weight: 800;
+                letter-spacing: -1px;
+                line-height: 1;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 24px;
+                align-items: center;
+            }
+
+            .nav-links a {
+                color: #eef3ff;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 15px;
+                font-family: 'Outfit', sans-serif;
+                transition: color 0.2s;
+            }
+
+            .nav-links a:hover {
+                color: #ffffff;
+            }
+
+            .nav-links>div {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+            }
+
+            .badge {
+                background-color: #f56565;
+                color: white;
+                padding: 2px 6px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: bold;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .user-name {
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .logout-btn {
+                color: #ffffff;
+                text-decoration: none;
+                opacity: 0.8;
+                font-size: 12px;
+                padding: 4px 8px;
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .logout-btn:hover {
+                opacity: 1;
+            }
+
+            /* TOAST SYSTEM */
+            #toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .toast {
+                min-width: 320px;
+                padding: 16px 20px;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                color: #2d3436;
+                font-weight: 600;
+                font-family: 'Segoe UI', sans-serif;
+                transform: translateX(120%);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                border-left: 6px solid #ccc;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .toast::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 3px;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            .toast-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 3px;
+                background: currentColor;
+                width: 100%;
+                animation: toast-progress 5s linear forwards;
+            }
+
+            @keyframes toast-progress {
+                from {
+                    width: 100%;
+                }
+
+                to {
+                    width: 0%;
+                }
+            }
+
+            .toast.show {
+                transform: translateX(0);
+            }
+
+            .toast-success {
+                border-left-color: #00b894;
+                color: #00b894;
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            .toast-error {
+                border-left-color: #d63031;
+                color: #d63031;
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            .toast-warning {
+                border-left-color: #f1c40f;
+                color: #f1c40f;
+                background: rgba(255, 255, 255, 0.98);
+            }
+
+            .toast-icon {
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                border-radius: 8px;
+                /* Squircle style */
+                flex-shrink: 0;
+            }
+
+            .toast-success .toast-icon {
+                background: rgba(0, 184, 148, 0.15);
+                color: #00b894;
+            }
+
+            .toast-error .toast-icon {
+                background: rgba(214, 48, 49, 0.15);
+                color: #d63031;
+            }
+
+            .toast-warning .toast-icon {
+                background: rgba(241, 196, 15, 0.15);
+                color: #f1c40f;
+            }
+
+
+            .toast-message {
+                flex: 1;
+                font-size: 15px;
+                color: #2d3436;
+            }
+
+            .toast-close {
+                cursor: pointer;
+                color: #b2bec3;
+                font-size: 20px;
+                transition: all 0.2s;
+            }
+
+            .toast-close:hover {
+                color: #636e72;
+                transform: rotate(90deg);
+            }
+        </style>
+
+        <a href="/" class="logo">RevHire</a>
+
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
+        <div th:if="${success}" id="success-trigger" th:attr="data-msg=${success}" style="display:none"></div>
+        <div th:if="${error}" id="error-trigger" th:attr="data-msg=${error}" style="display:none"></div>
+        <div th:if="${warning}" id="warning-trigger" th:attr="data-msg=${warning}" style="display:none"></div>
+
+        <div class="nav-links">
+
+            <!-- PUBLIC MENU -->
+            <div sec:authorize="isAnonymous()">
+                <a href="/">Home</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/auth/login">Login</a>
+                <a href="/auth/register">Sign Up</a>
+            </div>
+
+
+            <!-- JOB SEEKER MENU -->
+            <div sec:authorize="hasAuthority('ROLE_JOBSEEKER')">
+                <a href="/jobseeker/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/saved-jobs">Saved Jobs</a>
+                <a href="/applications">Applications</a>
+                <a href="/resume">Resume</a>
+                <a href="/profile">Profile</a>
+                <a href="/notifications">
+                    🔔 Notifications
+                    <span th:if="${notificationCount != null and notificationCount > 0}" class="badge"
+                        th:text="'+' + ${notificationCount}">+1</span>
+                </a>
+            </div>
+
+
+            <!-- EMPLOYER MENU -->
+            <div sec:authorize="hasAuthority('ROLE_EMPLOYER')">
+                <a href="/employer/dashboard">Dashboard</a>
+                <a href="/jobs">Browse Jobs</a>
+                <a href="/jobs/post">Post Job</a>
+                <a href="/employer/jobs">My Jobs</a>
+                <a href="/profile">Company Profile</a>
+                <a href="/notifications">
+                    🔔 Notifications
+                    <span th:if="${notificationCount != null and notificationCount > 0}" class="badge"
+                        th:text="'+' + ${notificationCount}">+1</span>
+                </a>
+            </div>
+
+
+            <!-- USER INFO -->
+            <div sec:authorize="isAuthenticated()" class="user-info">
+                <a href="/logout" class="logout-btn" style="border-left: none;">Logout</a>
+            </div>
+
+        </div>
+
+        <script>
+            function showToast(message, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+
+                const iconMap = {
+                    'success': '✓',
+                    'error': '✕',
+                    'warning': '⚠'
+                };
+
+                const icon = iconMap[type] || 'i';
+
+                toast.innerHTML = `
+                    <span class="toast-icon">${icon}</span>
+                    <div class="toast-message">${message}</div>
+                    <span class="toast-close" onclick="this.parentElement.remove()">&times;</span>
+                    <div class="toast-progress"></div>
+                `;
+
+                container.appendChild(toast);
+
+                setTimeout(() => toast.classList.add('show'), 10);
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }, 5000);
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const sTrigger = document.getElementById('success-trigger');
+                const eTrigger = document.getElementById('error-trigger');
+                const wTrigger = document.getElementById('warning-trigger');
+
+                if (sTrigger) showToast(sTrigger.getAttribute('data-msg'), 'success');
+                if (eTrigger) showToast(eTrigger.getAttribute('data-msg'), 'error');
+                if (wTrigger) showToast(wTrigger.getAttribute('data-msg'), 'warning');
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>

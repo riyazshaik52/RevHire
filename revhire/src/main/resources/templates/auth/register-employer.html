@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RevHire - Employer Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #6366f1;
+            --accent-soft: rgba(99, 102, 241, 0.1);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --bg-side: #0f172a;
+            --input-height: 52px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .split-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side: Branding & Image */
+        .brand-panel {
+            flex: 1;
+            max-width: 45%;
+            background: var(--bg-side);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px;
+            color: white;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/employer-reg-bg.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            filter: grayscale(20%);
+        }
+
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 100%);
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 40px;
+            display: block;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand-content h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .brand-content p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 440px;
+            margin-bottom: 40px;
+        }
+
+        .value-props {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .prop-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .prop-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        /* Right Side: Form */
+        .form-panel {
+            flex: 1.2;
+            padding: 60px 80px;
+            overflow-y: auto;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Integrated Navbar specifically for this page */
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-header .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .form-header a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .form-header a:hover {
+            color: var(--accent);
+        }
+
+        .form-container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .form-container h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-container .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .registration-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .form-section-title {
+            grid-column: span 2;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-field.full {
+            grid-column: span 2;
+        }
+
+        .form-field label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            height: var(--input-height);
+            padding: 0 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--primary);
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        textarea {
+            height: auto;
+            min-height: 120px;
+            padding: 14px 16px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .checkbox-field {
+            grid-column: span 2;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .checkbox-field input {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-field label {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .btn-register {
+            grid-column: span 2;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+
+        .btn-register:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+        }
+
+        .error-box {
+            grid-column: span 2;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #ef4444;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .brand-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="split-container">
+        <!-- Left Section: Branding -->
+        <div class="brand-panel">
+            <div class="brand-content">
+                <a href="/" class="brand-logo">RevHire Business</a>
+                <h1>Hire the best talent across the globe.</h1>
+                <p>Join over 10,000+ companies using RevHire to scale their engineering and product teams.</p>
+
+                <div class="value-props">
+                    <div class="prop-item">
+                        <div class="prop-icon">⚡</div>
+                        <span>Fast-track your hiring pipeline</span>
+                    </div>
+                    <div class="prop-item">
+                        <div class="prop-icon">🎯</div>
+                        <span>A.I. driven candidate matching</span>
+                    </div>
+                    <div class="prop-item">
+                        <div class="prop-icon">🌐</div>
+                        <span>Access global talent networks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Form -->
+        <main class="form-panel">
+            <!-- Custom Navbar Alignment -->
+            <div class="form-header">
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/jobs">Browse Jobs</a>
+                </div>
+                <div class="account-link">
+                    <a href="/auth/login">Have an account? <span style="color: var(--accent);">Sign In</span></a>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div th:if="${error}" class="error-box" th:text="${error}">Registration error.</div>
+
+                <h2>Create for Business</h2>
+                <p class="subtitle">Set up your company profile to start posting jobs.</p>
+
+                <form action="/auth/register/employer" method="post" class="registration-form">
+
+                    <div class="form-section-title">Company Profile</div>
+
+                    <div class="form-field">
+                        <label>Company Name *</label>
+                        <input type="text" name="companyName" placeholder="e.g. Acme Inc" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Industry Segment *</label>
+                        <select name="industry" required>
+                            <option value="">Select Industry</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Education">Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Workforce Size *</label>
+                        <select name="companySize" required>
+                            <option value="">Select Size</option>
+                            <option value="1-10">1-10 Members</option>
+                            <option value="11-50">11-50 Members</option>
+                            <option value="51-200">51-200 Members</option>
+                            <option value="200+">200+ Members</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Corporate Website</label>
+                        <input type="url" name="website" placeholder="https://company.com">
+                    </div>
+
+                    <div class="form-field full">
+                        <label>Headquarters Location *</label>
+                        <input type="text" name="location" placeholder="City, Country" required>
+                    </div>
+
+                    <div class="form-field full">
+                        <label>Organization Bio *</label>
+                        <textarea name="description" placeholder="Briefly describe your company culture and mission..."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-section-title">Primary Contact</div>
+
+                    <div class="form-field">
+                        <label>First Name *</label>
+                        <input type="text" name="firstName" placeholder="First Name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Last Name *</label>
+                        <input type="text" name="lastName" placeholder="Last Name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Professional Email *</label>
+                        <input type="email" name="email" placeholder="work@company.com" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="phone" placeholder="Contact Number" required>
+                    </div>
+
+                    <div class="form-field full">
+                        <label>Your Role *</label>
+                        <input type="text" name="position" placeholder="e.g. Talent Acquisition" required>
+                    </div>
+
+                    <div class="form-section-title">Security</div>
+
+                    <div class="form-field">
+                        <label>Set Password *</label>
+                        <input type="password" name="password" placeholder="Min 8 characters" minlength="8" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Confirm Entry *</label>
+                        <input type="password" name="confirmPassword" placeholder="Confirm password" required>
+                    </div>
+
+                    <div class="checkbox-field">
+                        <input type="checkbox" name="termsAccepted" value="true" required id="terms">
+                        <label for="terms">I verify my authority to register this organization and agree to the <a
+                                href="#">Service Agreement</a> and <a href="#">Privacy Protocol</a>.</label>
+                    </div>
+
+                    <button type="submit" class="btn-register">Register Organization</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

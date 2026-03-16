@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Company Profile - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>Edit Company Profile</h1>
+
+        <!-- Success/Error Messages handled by global toast -->
+
+
+        <form action="/employer/company/update" method="post">
+            <div class="form-group">
+                <label>Company Name *</label>
+                <input type="text" name="name" th:value="${company.name}" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Industry *</label>
+                    <select name="industry" required>
+                        <option value="">Select Industry</option>
+                        <option value="Technology" th:selected="${company.industry == 'Technology'}">Technology</option>
+                        <option value="Healthcare" th:selected="${company.industry == 'Healthcare'}">Healthcare</option>
+                        <option value="Finance" th:selected="${company.industry == 'Finance'}">Finance</option>
+                        <option value="Education" th:selected="${company.industry == 'Education'}">Education</option>
+                        <option value="Retail" th:selected="${company.industry == 'Retail'}">Retail</option>
+                        <option value="Manufacturing" th:selected="${company.industry == 'Manufacturing'}">Manufacturing
+                        </option>
+                        <option value="Other" th:selected="${company.industry == 'Other'}">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Company Size *</label>
+                    <select name="companySize" required>
+                        <option value="">Select Size</option>
+                        <option value="1-10" th:selected="${company.companySize == '1-10'}">1-10 employees</option>
+                        <option value="11-50" th:selected="${company.companySize == '11-50'}">11-50 employees</option>
+                        <option value="51-200" th:selected="${company.companySize == '51-200'}">51-200 employees
+                        </option>
+                        <option value="201-500" th:selected="${company.companySize == '201-500'}">201-500 employees
+                        </option>
+                        <option value="501-1000" th:selected="${company.companySize == '501-1000'}">501-1000 employees
+                        </option>
+                        <option value="1000+" th:selected="${company.companySize == '1000+'}">1000+ employees</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Location *</label>
+                <input type="text" name="location" th:value="${company.location}" placeholder="City, State" required>
+            </div>
+
+            <div class="form-group">
+                <label>Website</label>
+                <input type="url" name="website" th:value="${company.website}" placeholder="https://www.example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Company Description *</label>
+                <textarea name="description" placeholder="Tell us about your company, mission, culture, etc." required
+                    th:text="${company.description}"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Update Company Profile</button>
+        </form>
+
+        <a href="/employer/dashboard" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+
+</html>

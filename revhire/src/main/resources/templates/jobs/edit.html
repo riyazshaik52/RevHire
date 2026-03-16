@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Job - RevHire</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>Edit Job</h1>
+        <form th:action="@{'/jobs/update/' + ${job.id}}" method="post">
+            <input type="hidden" name="id" th:value="${job.id}">
+            
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" name="title" th:value="${job.title}" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Employment Type</label>
+                    <select name="employmentType" th:value="${job.employmentType}">
+                        <option value="FULL_TIME">Full Time</option>
+                        <option value="PART_TIME">Part Time</option>
+                        <option value="CONTRACT">Contract</option>
+                        <option value="INTERNSHIP">Internship</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Experience Level</label>
+                    <select name="experienceLevel" th:value="${job.experienceLevel}">
+                        <option value="ENTRY">Entry Level</option>
+                        <option value="MID">Mid Level</option>
+                        <option value="SENIOR">Senior Level</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" th:value="${job.location}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="5" required th:text="${job.description}"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Requirements</label>
+                <textarea name="requirements" rows="3" th:text="${job.requirements}"></textarea>
+            </div>
+            
+            <button type="submit">Update Job</button>
+        </form>
+        <a href="/employer/jobs" class="back-link">← Back to My Jobs</a>
+    </div>
+</body>
+</html>

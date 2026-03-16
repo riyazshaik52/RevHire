@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eaf1fb;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0b2f63 0%, #154a92 100%);
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            text-decoration: none;
+            display: inline-block;
+            color: #ffffff;
+            font-size: 44px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #eef3ff;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-title h1 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-title p {
+            color: #666;
+        }
+
+        .edit-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: #333;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-card .delete-form {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <!-- Success/Error Messages handled by global toast -->
+
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-title">
+                <h1 th:text="${user.firstName + ' ' + user.lastName}">John Doe</h1>
+                <p th:text="${user.profileHeadline ?: 'Add a professional headline'}">Software Developer</p>
+                <p th:if="${user.preferredRoles != null and !user.preferredRoles.isEmpty()}"
+                    style="color: #667eea; font-weight: 500; font-size: 14px; margin-top: 5px;">
+                    🎯 <span th:text="${user.preferredRoles}">Roles</span>
+                </p>
+                <p th:text="${user.location ?: 'Location not specified'}" style="margin-top: 5px;">New York, NY</p>
+                <p th:text="${user.email}">john@example.com</p>
+                <p th:text="${user.phone ?: 'Phone not specified'}">+1 234 567 890</p>
+            </div>
+            <a href="/profile/edit" class="edit-btn">Edit Profile</a>
+        </div>
+
+        <!-- Summary -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Summary</h2>
+            </div>
+            <p th:text="${user.summary ?: 'No summary added yet'}">Professional summary goes here...</p>
+        </div>
+
+        <!-- Education -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Education</h2>
+                <a href="/profile/education/add" class="add-btn">+ Add Education</a>
+            </div>
+            <div class="grid-2">
+                <div th:each="edu : ${educationList}" class="info-card">
+                    <h3 th:text="${edu.degree}">Bachelor's Degree</h3>
+                    <p th:text="${edu.institution}">University Name</p>
+                    <p th:text="${edu.fieldOfStudy}">Computer Science</p>
+                    <p th:text="${edu.startYear + ' - ' + (edu.endYear ?: 'Present')}">2018 - 2022</p>
+                    <p th:text="${edu.grade ?: 'Grade not specified'}">GPA: 3.8</p>
+                    <form class="delete-form" action="/profile/education/delete/"
+                        th:action="@{'/profile/education/delete/' + ${edu.id}}" method="post">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(educationList)}" class="info-card">
+                    <p>No education added yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Work Experience</h2>
+                <a href="/profile/experience/add" class="add-btn">+ Add Experience</a>
+            </div>
+            <div class="grid-2">
+                <div th:each="exp : ${experienceList}" class="info-card">
+                    <h3 th:text="${exp.jobTitle}">Software Engineer</h3>
+                    <p th:text="${exp.company}">Company Name</p>
+                    <p th:text="${exp.location ?: 'Location not specified'}">New York, NY</p>
+                    <p th:text="${exp.startYear + ' - ' + (exp.endYear ?: 'Present')}">2020 - Present</p>
+                    <p th:text="${exp.description ?: 'No description'}">Job description...</p>
+                    <form class="delete-form" action="/profile/experience/delete/"
+                        th:action="@{'/profile/experience/delete/' + ${exp.id}}" method="post">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(experienceList)}" class="info-card">
+                    <p>No experience added yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Skills</h2>
+            </div>
+            <div>
+                <span th:each="skill : ${skillList}" class="skill-tag">
+                    <span th:text="${skill.name}">Java</span>
+                    <form style="display: inline;" action="/profile/skills/delete/"
+                        th:action="@{'/profile/skills/delete/' + ${skill.id}}" method="post">
+                        <button type="submit"
+                            style="background: none; border: none; color: white; cursor: pointer; margin-left: 5px;">×</button>
+                    </form>
+                </span>
+                <span th:if="${#lists.isEmpty(skillList)}">No skills added yet.</span>
+            </div>
+            <form action="/profile/skills/add" method="post" style="margin-top: 20px;">
+                <input type="text" name="skillName" placeholder="Enter a skill" required
+                    style="padding: 8px; width: 200px; border: 1px solid #ddd; border-radius: 5px;">
+                <button type="submit"
+                    style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Add
+                    Skill</button>
+            </form>
+        </div>
+
+        <!-- Projects -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Projects</h2>
+                <a href="/profile/project/add" class="add-btn">+ Add Project</a>
+            </div>
+            <div class="grid-2">
+                <div th:each="project : ${projectList}" class="info-card">
+                    <h3 th:text="${project.title}">Project Title</h3>
+                    <p th:text="${project.description ?: 'No description'}">Project description...</p>
+                    <p th:text="${project.technologies ?: 'Technologies not specified'}">Java, Spring Boot</p>
+                    <p th:text="${project.startYear + ' - ' + (project.endYear ?: 'Present')}">2023 - Present</p>
+                    <a th:if="${project.projectUrl}" th:href="${project.projectUrl}" target="_blank">View Project</a>
+                    <form class="delete-form" action="/profile/project/delete/"
+                        th:action="@{'/profile/project/delete/' + ${project.id}}" method="post">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(projectList)}" class="info-card">
+                    <p>No projects added yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Certifications</h2>
+                <a href="/profile/certification/add" class="add-btn">+ Add Certification</a>
+            </div>
+            <div class="grid-2">
+                <div th:each="cert : ${certificationList}" class="info-card">
+                    <h3 th:text="${cert.name}">Certification Name</h3>
+                    <p th:text="${cert.issuingOrganization}">Issuing Organization</p>
+                    <p th:text="${#temporals.format(cert.issueDate, 'MMM yyyy')}">Issued Jan 2023</p>
+                    <p th:if="${cert.expirationDate}"
+                        th:text="'Expires ' + ${#temporals.format(cert.expirationDate, 'MMM yyyy')}">Expires Dec 2025
+                    </p>
+                    <a th:if="${cert.credentialUrl}" th:href="${cert.credentialUrl}" target="_blank">View Credential</a>
+                    <form class="delete-form" action="/profile/certification/delete/"
+                        th:action="@{'/profile/certification/delete/' + ${cert.id}}" method="post">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(certificationList)}" class="info-card">
+                    <p>No certifications added yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

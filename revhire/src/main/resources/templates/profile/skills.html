@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Skills - RevHire</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-height: 100px;
+        }
+        .skill-tag {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .skill-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .add-skill-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .add-skill-form input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .add-skill-form button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .suggested-skills {
+            margin-top: 30px;
+        }
+        .suggested-skills h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .suggested-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .suggested-skill {
+            background: #e0e0e0;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .suggested-skill:hover {
+            background: #667eea;
+            color: white;
+        }
+        .save-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>Manage Your Skills</h1>
+        <div class="subtitle">Add skills that showcase your expertise</div>
+        
+        <div class="skills-container" id="skillsContainer">
+            <div class="skill-tag">
+                Java
+                <span class="remove" onclick="this.parentElement.remove()">×</span>
+            </div>
+            <div class="skill-tag">
+                Spring Boot
+                <span class="remove" onclick="this.parentElement.remove()">×</span>
+            </div>
+            <div class="skill-tag">
+                SQL
+                <span class="remove" onclick="this.parentElement.remove()">×</span>
+            </div>
+        </div>
+        
+        <div class="add-skill-form">
+            <input type="text" id="newSkill" placeholder="Enter a skill (e.g. Python)">
+            <button onclick="addSkill()">Add</button>
+        </div>
+        
+        <div class="suggested-skills">
+            <h3>Suggested Skills</h3>
+            <div class="suggested-list">
+                <span class="suggested-skill" onclick="addSuggestedSkill('JavaScript')">JavaScript</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('React')">React</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('Python')">Python</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('AWS')">AWS</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('Docker')">Docker</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('Kubernetes')">Kubernetes</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('MongoDB')">MongoDB</span>
+                <span class="suggested-skill" onclick="addSuggestedSkill('Node.js')">Node.js</span>
+            </div>
+        </div>
+        
+        <button class="save-btn" onclick="saveSkills()">Save Skills</button>
+        
+        <a href="/profile" class="back-link">← Back to Profile</a>
+    </div>
+
+    <script>
+        function addSkill() {
+            const input = document.getElementById('newSkill');
+            const skill = input.value.trim();
+            if (skill) {
+                const container = document.getElementById('skillsContainer');
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = skill + ' <span class="remove" onclick="this.parentElement.remove()">×</span>';
+                container.appendChild(skillTag);
+                input.value = '';
+            }
+        }
+        
+        function addSuggestedSkill(skill) {
+            const container = document.getElementById('skillsContainer');
+            const skillTag = document.createElement('div');
+            skillTag.className = 'skill-tag';
+            skillTag.innerHTML = skill + ' <span class="remove" onclick="this.parentElement.remove()">×</span>';
+            container.appendChild(skillTag);
+        }
+        
+        function saveSkills() {
+            const skills = [];
+            document.querySelectorAll('.skill-tag').forEach(tag => {
+                skills.push(tag.childNodes[0].nodeValue.trim());
+            });
+            alert('Skills saved: ' + skills.join(', '));
+            // In real implementation, send to server
+        }
+    </script>
+</body>
+</html>

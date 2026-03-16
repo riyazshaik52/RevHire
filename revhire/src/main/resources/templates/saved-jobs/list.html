@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Jobs - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .saved-jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .job-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: #6366f1;
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .company-icon {
+            width: 48px;
+            height: 48px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .remove-btn:hover {
+            color: #ef4444;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 5px;
+            text-decoration: none;
+        }
+
+        .job-title:hover {
+            color: #6366f1;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .job-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer-action {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-apply {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-apply:hover {
+            background: #4f46e5;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-view {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-view:hover {
+            background: #e2e8f0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 24px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .explore-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .explore-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Your Favorite Jobs</h1>
+            <p>Keep track of positions you're interested in and apply when you're ready.</p>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${savedJobs == null or savedJobs.empty}" class="empty-state">
+            <div class="empty-icon">💖</div>
+            <h2>No favorites yet</h2>
+            <p>You haven't saved any jobs yet. Start exploring to find your dream role!</p>
+            <a href="/jobs" class="explore-btn">Explore Jobs</a>
+        </div>
+
+        <!-- Saved Jobs Grid -->
+        <div th:unless="${savedJobs == null or savedJobs.empty}" class="saved-jobs-grid">
+            <div th:each="savedJob : ${savedJobs}" class="job-card" th:id="'job-' + ${savedJob.job.id}">
+                <div class="job-card-header">
+                    <div class="company-icon">🏢</div>
+                    <form th:action="@{'/saved-jobs/remove/' + ${savedJob.job.id}}" method="post">
+                        <button type="submit" class="remove-btn" title="Remove from favorites">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <a th:href="@{'/jobs/' + ${savedJob.job.id}}" class="job-title" th:text="${savedJob.job.title}">Job
+                    Title</a>
+                <div class="company-name"
+                    th:text="${savedJob.job.employer != null ? (savedJob.job.employer.firstName + ' ' + savedJob.job.employer.lastName) : 'Employer'}">
+                    Company</div>
+
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <span>📍</span>
+                        <span th:text="${savedJob.job.location}">Location</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>💼</span>
+                        <span th:text="${savedJob.job.employmentType}">Full-time</span>
+                    </div>
+                    <div class="meta-item" th:if="${savedJob.job.minSalary}">
+                        <span th:text="${savedJob.job.salaryCurrency}">$</span>
+                        <span th:text="${savedJob.job.minSalary}">Salary</span>
+                    </div>
+                </div>
+
+                <div class="job-footer">
+                    <a th:href="@{'/jobs/' + ${savedJob.job.id}}" class="footer-action btn-view">View Details</a>
+                    <a th:href="@{'/applications/apply/' + ${savedJob.job.id}}" class="footer-action btn-apply">Apply
+                        Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

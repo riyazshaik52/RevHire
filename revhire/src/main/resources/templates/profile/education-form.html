@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Education - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eaf1fb;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #0b2f63;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f9fbff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px;
+            border: none;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        ::placeholder {
+            color: #a0aec0;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>🎓 Add Education</h1>
+        <form action="/profile/education/save" method="post">
+            <div class="form-group">
+                <label>Degree *</label>
+                <select name="degree" required>
+                    <option value="">Select Degree</option>
+                    <option value="High School">High School</option>
+                    <option value="Associate Degree">Associate Degree</option>
+                    <option value="Bachelor's Degree">Bachelor's Degree</option>
+                    <option value="Master's Degree">Master's Degree</option>
+                    <option value="PhD">PhD</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Certificate">Certificate</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Institution *</label>
+                <input type="text" name="institution" placeholder="e.g. Stanford University" required>
+            </div>
+
+            <div class="form-group">
+                <label>Field of Study *</label>
+                <input type="text" name="fieldOfStudy" placeholder="e.g. Computer Science" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Start Year *</label>
+                    <input type="number" name="startYear" min="1950" max="2030" placeholder="YYYY" required>
+                </div>
+                <div class="form-group">
+                    <label>End Year</label>
+                    <input type="number" name="endYear" min="1950" max="2030"
+                        placeholder="YYYY (Leave blank if present)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>CGPA/Percentage</label>
+                <input type="text" name="grade" placeholder="e.g. 3.8 GPA or 85%">
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="4"
+                    placeholder="Mention your core subjects, achievements, or any relevant activities..."></textarea>
+            </div>
+
+            <button type="submit" class="btn">Save Education</button>
+        </form>
+        <a href="/profile" class="back-link">← Back to Profile</a>
+    </div>
+</body>
+
+</html>

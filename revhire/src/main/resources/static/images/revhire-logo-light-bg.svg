@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="240" viewBox="0 0 900 240" role="img" aria-label="RevHire logo on light background">
+  <defs>
+    <linearGradient id="lightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5B63E6"/>
+      <stop offset="100%" stop-color="#7B55BF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="240" rx="20" fill="#F4F5FB"/>
+
+  <g transform="translate(32,34)">
+    <rect x="0" y="0" width="170" height="170" rx="40" fill="url(#lightGrad)"/>
+    <rect x="36" y="50" width="98" height="66" rx="12" fill="#FFFFFF" opacity="0.95"/>
+    <rect x="70" y="36" width="30" height="18" rx="8" fill="#FFFFFF" opacity="0.95"/>
+    <path d="M52 86 L78 110 L120 68" fill="none" stroke="#4F46E5" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g transform="translate(232,74)">
+    <text x="0" y="56" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="78" font-weight="800" fill="#1F2A63">RevHire</text>
+    <text x="2" y="102" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-size="26" font-weight="600" fill="#6B7280">Find Talent. Find Opportunity.</text>
+  </g>
+</svg>

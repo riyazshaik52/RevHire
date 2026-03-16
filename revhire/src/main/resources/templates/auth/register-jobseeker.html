@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RevHire - Candidate Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --bg-side: #0f172a;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --input-height: 52px;
+            --accent-soft: rgba(99, 102, 241, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .split-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side: Career Branding */
+        .brand-panel {
+            flex: 1;
+            max-width: 45%;
+            background: var(--bg-side);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px;
+            color: white;
+            overflow: hidden;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/jobseeker-reg-bg.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+        }
+
+        .brand-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(99, 102, 241, 0.6) 100%);
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 40px;
+            display: block;
+            text-decoration: none;
+            color: white;
+        }
+
+        .brand-content h1 {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .brand-content p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 440px;
+            margin-bottom: 40px;
+        }
+
+        .feature-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        /* Right Side: Form Panel */
+        .form-panel {
+            flex: 1.2;
+            padding: 60px 80px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-header .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .form-header a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .form-header a:hover {
+            color: var(--primary);
+        }
+
+        .form-container {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .form-container h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--bg-side);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .registration-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .section-separator {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .section-separator span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .section-separator .line {
+            height: 1px;
+            background: var(--border);
+            flex: 1;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-field.full {
+            grid-column: span 2;
+        }
+
+        .form-field label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--bg-side);
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: var(--input-height);
+            padding: 0 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--bg-side);
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        /* Status Grid Sync */
+        .status-grid {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .status-pill:hover {
+            border-color: var(--primary);
+            background: var(--accent-soft);
+        }
+
+        .status-pill input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .status-pill span {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--bg-side);
+        }
+
+        .agreement {
+            grid-column: span 2;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+        }
+
+        .agreement input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .agreement label {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .agreement a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .btn-init {
+            grid-column: span 2;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-init:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
+        }
+
+        .error-overlay {
+            grid-column: span 2;
+            background: #fff1f2;
+            border: 1px solid #fecaca;
+            color: #e11d48;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .brand-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="split-container">
+        <!-- Left Section: Candidate Branding -->
+        <div class="brand-panel">
+            <div class="brand-content">
+                <a href="/" class="brand-logo">RevHire</a>
+                <h1>Unlock your next career breakthrough.</h1>
+                <p>Build your professional identity and let A.I. connect you with opportunities that match your
+                    potential.</p>
+
+                <div class="feature-stack">
+                    <div class="feature-item">
+                        <div class="feature-icon">🚀</div>
+                        <span>Fast-track to top employers</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✨</div>
+                        <span>Smart resume-to-job matching</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <span>Track your applications in real-time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Form -->
+        <main class="form-panel">
+            <!-- Precise Header Alignment -->
+            <div class="form-header">
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/jobs">Browse Jobs</a>
+                </div>
+                <div class="account-link">
+                    <a href="/auth/login">Joined already? <span style="color: var(--primary);">Log In</span></a>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div th:if="${error}" class="error-overlay" th:text="${error}">Registration failed. Check details.</div>
+
+                <h2>Join Candidate Network</h2>
+                <p class="subtitle">Complete the fields below to activate your account.</p>
+
+                <form action="/auth/register/jobseeker" method="post" class="registration-form">
+
+                    <div class="section-separator">
+                        <span>Identity Verification</span>
+                        <div class="line"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>First Name *</label>
+                        <input type="text" name="firstName" placeholder="First Name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Last Name *</label>
+                        <input type="text" name="lastName" placeholder="Last Name" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" placeholder="name@email.com" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Primary Phone</label>
+                        <input type="tel" name="phone" placeholder="+1 (000) 000-0000">
+                    </div>
+
+                    <div class="form-field full">
+                        <label>Current Location *</label>
+                        <input type="text" name="location" placeholder="City, State, Country" required>
+                    </div>
+
+                    <div class="section-separator">
+                        <span>Employment Status</span>
+                        <div class="line"></div>
+                    </div>
+
+                    <div class="status-grid">
+                        <label class="status-pill">
+                            <input type="radio" name="employmentStatus" value="EMPLOYED" required>
+                            <span>Employed</span>
+                        </label>
+                        <label class="status-pill">
+                            <input type="radio" name="employmentStatus" value="UNEMPLOYED">
+                            <span>Unemployed</span>
+                        </label>
+                        <label class="status-pill">
+                            <input type="radio" name="employmentStatus" value="STUDENT">
+                            <span>Student</span>
+                        </label>
+                        <label class="status-pill">
+                            <input type="radio" name="employmentStatus" value="FREELANCER">
+                            <span>Freelancer</span>
+                        </label>
+                    </div>
+
+                    <div class="section-separator">
+                        <span>Security Credentials</span>
+                        <div class="line"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Create Password *</label>
+                        <input type="password" name="password" placeholder="Min 8 characters" minlength="8" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Verify Password *</label>
+                        <input type="password" name="confirmPassword" placeholder="Confirm password" required>
+                    </div>
+
+                    <div class="agreement">
+                        <input type="checkbox" name="termsAccepted" value="true" required id="terms">
+                        <label for="terms">I verify my professional details and agree to RevHire's <a href="#">Service
+                                Terms</a> and <a href="#">Privacy Protocol</a>.</label>
+                    </div>
+
+                    <button type="submit" class="btn-init">Initialize Profile</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

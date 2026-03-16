@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eaf1fb;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mark-read-btn {
+            background-color: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .mark-read-btn:hover {
+            background-color: #5a67d8;
+        }
+
+        .notification-item.unread {
+            background-color: #f0f4f8;
+            border-left: 4px solid #667eea;
+        }
+
+        .notification-item.unread .notification-message {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .notifications-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .notification-item {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: flex-start;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            margin-right: 20px;
+            color: #667eea;
+            margin-top: 2px;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-message {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Your Notifications</h2>
+            <!-- Mark All as Read Form -->
+            <form th:if="${notificationCount != null and notificationCount > 0}"
+                th:action="@{/notifications/mark-all-read}" method="post" style="margin: 0;">
+                <button type="submit" class="mark-read-btn">
+                    ✓ Mark all as read
+                </button>
+            </form>
+        </div>
+
+        <div class="notifications-container">
+
+            <div th:if="${notifications.isEmpty()}" class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>No notifications yet</h3>
+                <p>When you get updates, they'll show up here.</p>
+            </div>
+
+            <div th:each="n : ${notifications}" class="notification-item"
+                th:classappend="${!n.readStatus ? 'unread' : ''}">
+                <div class="notification-icon">🔔</div>
+                <div class="notification-content">
+                    <div class="notification-message" th:text="${n.message}">You have a new notification!</div>
+                    <div class="notification-time" th:text="${#temporals.format(n.createdAt, 'dd MMM yyyy, HH:mm')}">
+                        Just now</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

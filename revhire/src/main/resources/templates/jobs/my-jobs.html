@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Jobs - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .post-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .job-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .job-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-closed {
+            background: #fee;
+            color: #c33;
+        }
+
+        .status-filled {
+            background: #fff3e0;
+            color: #ed6c02;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .job-stats {
+            display: flex;
+            gap: 30px;
+            padding: 15px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .job-stat {
+            text-align: center;
+        }
+
+        .job-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .job-stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>My Job Postings</h1>
+            <a href="/jobs/post" class="post-btn">+ Post New Job</a>
+        </div>
+
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <div th:if="${success}" class="success" th:text="${success}"></div>
+
+        <!-- Calculate stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(jobs)}">0</div>
+                <div class="stat-label">Total Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(jobs.?[status == 'ACTIVE'])}">0</div>
+                <div class="stat-label">Active Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${jobs.![applicationCount].?[#this > 0].size()}">0</div>
+                <div class="stat-label">With Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${jobs.![applicationCount].sum()}">0</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+        </div>
+
+        <div th:if="${jobs.empty}" class="empty-state">
+            <p>You haven't posted any jobs yet.</p>
+            <a href="/jobs/post" class="post-btn" style="display: inline-block; margin-top: 20px;">Post Your First
+                Job</a>
+        </div>
+
+        <div th:each="job : ${jobs}" class="job-card">
+            <div class="job-header">
+                <span class="job-title" th:text="${job.title}"></span>
+                <span class="job-status" th:classappend="${job.status == 'ACTIVE'} ? 'status-active' : 
+                                                       (${job.status == 'FILLED'} ? 'status-filled' : 'status-closed')"
+                    th:text="${job.status}"></span>
+            </div>
+
+            <div class="job-meta">
+                <span th:text="${job.location}"></span>
+                <span>•</span>
+                <span th:text="${job.employmentType}"></span>
+                <span>•</span>
+                <span th:text="${job.experienceLevel}"></span>
+                <span>•</span>
+                <span th:if="${job.minSalary}">
+                    <span th:text="${job.salaryCurrency}"></span>
+                    <span th:text="${job.minSalary}"></span>
+                    <span th:if="${job.maxSalary}"> - <span th:text="${job.maxSalary}"></span></span>
+                </span>
+            </div>
+
+            <div class="job-stats">
+                <div class="job-stat">
+                    <div class="job-stat-value" th:text="${job.viewCount}">0</div>
+                    <div class="job-stat-label">Views</div>
+                </div>
+                <div class="job-stat">
+                    <div class="job-stat-value" th:text="${job.applicationCount}">0</div>
+                    <div class="job-stat-label">Applications</div>
+                </div>
+                <div class="job-stat">
+                    <div class="job-stat-value" th:text="${job.numberOfOpenings}">1</div>
+                    <div class="job-stat-label">Openings</div>
+                </div>
+                <div class="job-stat">
+                    <div class="job-stat-value" th:text="${#temporals.format(job.createdAt, 'dd MMM')}"></div>
+                    <div class="job-stat-label">Posted</div>
+                </div>
+            </div>
+
+            <div class="job-actions">
+                <a href="/jobs/" th:href="@{'/jobs/' + ${job.id}}" class="btn btn-primary">View Details</a>
+
+                <form th:if="${job.status == 'ACTIVE'}" th:action="@{/jobs/close/{id}(id=${job.id})}" method="post"
+                    style="display: inline;">
+                    <button type="submit" class="btn btn-warning">Close</button>
+                </form>
+
+                <form th:if="${job.status == 'CLOSED'}" th:action="@{/jobs/reopen/{id}(id=${job.id})}" method="post"
+                    style="display: inline;">
+                    <button type="submit" class="btn btn-success">Reopen</button>
+                </form>
+
+                <button class="btn btn-danger"
+                    onclick="alert('View applications feature coming soon!')">Applications</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

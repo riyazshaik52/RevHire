@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - RevHire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:replace="common/header :: header"></div>
+
+    <div class="container">
+        <h1>Edit Profile</h1>
+
+        <form action="/profile/update" method="post">
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="firstName" th:value="${user.firstName}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="lastName" th:value="${user.lastName}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" name="phone" th:value="${user.phone}">
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" th:value="${user.location}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Employment Status</label>
+                <select name="employmentStatus">
+                    <option value="EMPLOYED" th:selected="${user.employmentStatus == 'EMPLOYED'}">Employed</option>
+                    <option value="UNEMPLOYED" th:selected="${user.employmentStatus == 'UNEMPLOYED'}">Unemployed
+                    </option>
+                    <option value="STUDENT" th:selected="${user.employmentStatus == 'STUDENT'}">Student</option>
+                    <option value="FREELANCER" th:selected="${user.employmentStatus == 'FREELANCER'}">Freelancer
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Professional Headline</label>
+                <input type="text" name="profileHeadline" th:value="${user.profileHeadline}">
+            </div>
+
+            <div class="form-group">
+                <label>Preferred Job Roles</label>
+                <input type="text" name="preferredRoles"
+                    placeholder="e.g. Software Engineer, Data Analyst (Comma-separated)"
+                    th:value="${user.preferredRoles}">
+            </div>
+
+            <div class="form-group">
+                <label>Summary</label>
+                <textarea name="summary" rows="4" maxlength="2000" th:text="${user.summary}"></textarea>
+            </div>
+
+            <button type="submit" class="btn">Update Profile</button>
+        </form>
+
+        <a href="/profile" class="back-link">← Back to Profile</a>
+    </div>
+</body>
+
+</html>
