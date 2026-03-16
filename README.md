@@ -77,7 +77,7 @@ Service Layer (Business Logic)
 Repository Layer (Spring Data JPA)
       │
       ▼
-Database (H2 / SQL)
+Database (Oracle SQL)
 ```
 
 ---
@@ -92,7 +92,7 @@ Database (H2 / SQL)
 | ORM | Spring Data JPA |
 | Build Tool | Maven |
 | Frontend | HTML, CSS, Thymeleaf |
-| Database | H2 |
+| Database | Oracle SQL |
 
 ---
 
